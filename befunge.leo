@@ -37,17 +37,25 @@ and output
     Hello, World!</t>
 <t tx="kajsa.20130215183429.1368"></t>
 <t tx="kajsa.20130215183429.1369">runBefungeProgram :: String -&gt; String
-runBefungeProgram program = interpretProgram program []
+runBefungeProgram program = interpretProgram (Program program) (ProgramCounter 0) []
 
-interpretProgram :: String -&gt; String -&gt; String
-interpretProgram ('"':xs)       stack     = interpretString xs stack
-interpretProgram (',':xs)       (s:stack) = s:(interpretProgram xs stack)
-interpretProgram ('@':xs)       stack     = ""
-interpretProgram   (x:xs)       stack     = interpretProgram xs stack
+interpretProgram :: Program -&gt; ProgramCounter -&gt; String -&gt; String
+interpretProgram p pc stack =
+    case instructionAt p pc of
+        '"' -&gt; interpretString p nextPc stack
+        ',' -&gt; (head stack):(interpretProgram p nextPc (tail stack))
+        '@' -&gt; ""
+        _ -&gt; interpretProgram p nextPc stack
+    where
+        nextPc = calculateNextPc p pc
 
-interpretString :: String -&gt; String -&gt; String
-interpretString ('"':xs) stack = interpretProgram xs stack
-interpretString (c:xs) stack = interpretString xs (c:stack)</t>
+interpretString :: Program -&gt; ProgramCounter -&gt; String -&gt; String
+interpretString p pc stack =
+    case instructionAt p pc of
+        '"' -&gt; interpretProgram p nextPc stack
+        c -&gt; interpretString p nextPc (c:stack)
+    where
+        nextPc = calculateNextPc p pc</t>
 <t tx="kajsa.20130215183429.1370"></t>
 <t tx="kajsa.20130215183429.1371"></t>
 <t tx="kajsa.20130215185232.1373">* investigate whether external editors are usable for file nodes</t>
