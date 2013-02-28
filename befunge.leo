@@ -15,7 +15,7 @@
 </v>
 <v t="kajsa.20130215185232.1373"><vh>TODO</vh></v>
 <v t="kajsa.20130215183429.1368" a="E"><vh>Program</vh>
-<v t="kajsa.20130215183429.1369"><vh>Main run function</vh></v>
+<v t="kajsa.20130215183429.1369"><vh>Interpreter</vh></v>
 <v t="kajsa.20130215183429.1371"><vh>Commands</vh></v>
 <v t="kajsa.20130215183429.1370" a="E"><vh>Files</vh>
 <v t="kajsa.20130215180649.1361" a="E"><vh>@file BefungeParser.hs</vh></v>
@@ -36,15 +36,15 @@ and output
 
     Hello, World!</t>
 <t tx="kajsa.20130215183429.1368"></t>
-<t tx="kajsa.20130215183429.1369">runBefungeProgram :: String -&gt; IO ()
-runBefungeProgram program = do let result = executeProgram program []
-                               putStrLn result
+<t tx="kajsa.20130215183429.1369">runBefungeProgram :: String -&gt; String
+runBefungeProgram program = executeProgram program []
                             
 executeProgram :: String -&gt; String -&gt; String
 executeProgram ('"':c:'"':xs) stack     = executeProgram xs (c:stack)
 executeProgram (',':xs)       (s:stack) = s:(executeProgram xs stack)
 executeProgram ('@':xs)       stack     = ""
-executeProgram   (x:xs)       stack     = executeProgram xs stack</t>
+executeProgram   (x:xs)       stack     = executeProgram xs stack
+</t>
 <t tx="kajsa.20130215183429.1370"></t>
 <t tx="kajsa.20130215183429.1371"></t>
 <t tx="kajsa.20130215185232.1373">* investigate whether external editors are usable for file nodes</t>
