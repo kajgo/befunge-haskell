@@ -37,14 +37,17 @@ and output
     Hello, World!</t>
 <t tx="kajsa.20130215183429.1368"></t>
 <t tx="kajsa.20130215183429.1369">runBefungeProgram :: String -&gt; String
-runBefungeProgram program = executeProgram program []
-                            
-executeProgram :: String -&gt; String -&gt; String
-executeProgram ('"':c:'"':xs) stack     = executeProgram xs (c:stack)
-executeProgram (',':xs)       (s:stack) = s:(executeProgram xs stack)
-executeProgram ('@':xs)       stack     = ""
-executeProgram   (x:xs)       stack     = executeProgram xs stack
-</t>
+runBefungeProgram program = interpretProgram program []
+
+interpretProgram :: String -&gt; String -&gt; String
+interpretProgram ('"':xs)       stack     = interpretString xs stack
+interpretProgram (',':xs)       (s:stack) = s:(interpretProgram xs stack)
+interpretProgram ('@':xs)       stack     = ""
+interpretProgram   (x:xs)       stack     = interpretProgram xs stack
+
+interpretString :: String -&gt; String -&gt; String
+interpretString ('"':xs) stack = interpretProgram xs stack
+interpretString (c:xs) stack = interpretString xs (c:stack)</t>
 <t tx="kajsa.20130215183429.1370"></t>
 <t tx="kajsa.20130215183429.1371"></t>
 <t tx="kajsa.20130215185232.1373">* investigate whether external editors are usable for file nodes</t>

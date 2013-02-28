@@ -3,21 +3,28 @@
 -- @+others
 -- @+node:kajsa.20130215183429.1369: ** Interpreter
 runBefungeProgram :: String -> String
-runBefungeProgram program = executeProgram program []
-                            
-executeProgram :: String -> String -> String
-executeProgram ('"':c:'"':xs) stack     = executeProgram xs (c:stack)
-executeProgram (',':xs)       (s:stack) = s:(executeProgram xs stack)
-executeProgram ('@':xs)       stack     = ""
-executeProgram   (x:xs)       stack     = executeProgram xs stack
+runBefungeProgram program = interpretProgram program []
+
+interpretProgram :: String -> String -> String
+interpretProgram ('"':xs)       stack     = interpretString xs stack
+interpretProgram (',':xs)       (s:stack) = s:(interpretProgram xs stack)
+interpretProgram ('@':xs)       stack     = ""
+interpretProgram   (x:xs)       stack     = interpretProgram xs stack
+
+interpretString :: String -> String -> String
+interpretString ('"':xs) stack = interpretProgram xs stack
+interpretString (c:xs) stack = interpretString xs (c:stack)
 -- @+node:kajsa.20130228131825.1375: ** Run program
 assertGivesOutput :: String -> String -> IO ()
 assertGivesOutput program expectedOutput =
-    case expectedOutput == runBefungeProgram program of
-        True -> putStrLn $ "Pass: " ++ program 
-        False -> putStrLn $ "Fail: " ++ program
+    case expectedOutput == actualOutput of
+        True -> putStrLn $ "Pass: " ++ program ++ " -> " ++ actualOutput
+        False -> putStrLn $ "Fail: " ++ program ++ " -> " ++ actualOutput
+    where
+        actualOutput = runBefungeProgram program
 
 main = do
     assertGivesOutput "\"!\",@" "!"
+    assertGivesOutput "\"!dlroW olleH\",,,,,,,,,,,,@" "Hello World!"
 -- @-others
 -- @-leo
