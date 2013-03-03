@@ -37,7 +37,7 @@ and output
     Hello, World!</t>
 <t tx="kajsa.20130215183429.1368"></t>
 <t tx="kajsa.20130215183429.1369">runBefungeProgram :: String -&gt; String
-runBefungeProgram program = interpretProgram (Program program) (ProgramCounter 0) []
+runBefungeProgram program = interpretProgram (Program (lines program)) (ProgramCounter 0 0 Right) []
 
 interpretProgram :: Program -&gt; ProgramCounter -&gt; String -&gt; String
 interpretProgram p pc stack =
